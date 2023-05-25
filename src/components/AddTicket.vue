@@ -13,20 +13,21 @@
         />
       </div>
       <div class="form-group">
-        <label for="document">Document</label>
+        <label for="email">E-mail</label>
         <input
           class="form-control"
-          id="document"
+          id="email"
           required
-          v-model="ticket.document"
-          name="document"
+          v-model="ticket.email"
+          name="email"
         />
       </div>
+
       <button @click="save" class="btn btn-success">Submit</button>
     </div>
     <div v-else>
       <h4>You submitted successfully!</h4>
-      <h5>Position {{ticket.response.position}}</h5>     
+      <h5>Position {{ ticket.response.position }}</h5>
       <button class="btn btn-success" @click="newForm">Add</button>
     </div>
   </div>
@@ -36,12 +37,13 @@
 import TicketService from "../services/TicketService";
 export default {
   name: "create ticket",
+
   data() {
     return {
       ticket: {
         name: "",
-        document: "",
-        response:"",
+        email: "",
+        response: "",
         published: false,
       },
       submitted: false,
@@ -50,14 +52,14 @@ export default {
   methods: {
     save() {
       var data = {
-        document: this.ticket.document,
+        email: this.ticket.email,
         name: this.ticket.name,
       };
 
       TicketService.create(data)
         .then((res) => {
           this.submitted = true;
-          this.ticket.response =res.data;
+          this.ticket.response = res.data;
         })
         .catch((e) => {
           console.log(e);
