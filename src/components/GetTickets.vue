@@ -2,7 +2,7 @@
   <div>
     <div class="spinner-border m-5 center" v-if="loading" role="status"></div>
     <div v-if="tickets.length > 0">
-      <table class="table table-bordered table-sm">
+      <table class="table table-sm">
         <thead class="thead-dark">
           <tr>
             <th scope="col">Posição</th>
@@ -12,7 +12,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="t in this.tickets" :key="t._id">
+          <tr @click="selectTableRow(t)" v-for="t in this.tickets" :key="t._id">
             <td>{{ t.index }}</td>
             <td>{{ t.name }}</td>
             <td>{{ parseDate(t.inserted_at) }}</td>
@@ -36,6 +36,7 @@
 </template>
 
 <script>
+
 import TicketService from "../services/TicketService";
 import moment from "moment";
 export default {
@@ -54,6 +55,19 @@ export default {
   methods: {
     parseDate(v) {
       return moment(v).format("LT");
+    },
+    selectTableRow(row) {
+      console.log(row);
+    },
+    showAlert() {
+      // // Use sweetalert2
+      // Swal.fire({
+      //   title: "Error!",
+      //   text: "Do you want to continue",
+      //   icon: "error",
+      //   confirmButtonText: "Cool",
+      // });
+      // this.$swal("Hello Vue world!!!");
     },
 
     loadTickets() {
@@ -75,6 +89,7 @@ export default {
         .then((res) => {
           console.log(res);
           this.loadTickets();
+         // Swal.fire("Check-in feito com sucesso!", "", "success");
         })
         .catch((e) => {
           console.log(e);
@@ -90,9 +105,12 @@ h4 {
   text-align: center;
 }
 tr:hover {
-  background-color: rgb(225, 255, 224);
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 255);
 }
-
+tr {
+  color: white;
+}
 .submit-form {
   max-width: 300px;
   margin: auto;

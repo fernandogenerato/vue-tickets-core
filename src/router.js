@@ -1,15 +1,24 @@
 import { createWebHistory, createRouter } from "vue-router";
 
 const routes = [
-  // {
-  //   path: "/",
-  //   alias: "/tutorials",
-  //   name: "tutorials",
-  //   component: () => import("./components/TutorialsList")
-  // },
+  { path: "/", redirect: "/login" },
+  {
+    path: "/signup",
+    name: "Signup",
+    component: () => import("./components/Signup"),
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: () => import("./components/Login"),
+  },
+  {
+    path: "/home",
+    name: "home",
+    component: () => import("./components/Home"),
+  },
   {
     path: "/admin",
-    name: "tutorial-details",
     component: () => import("./components/GetTickets"),
   },
   {
@@ -23,5 +32,13 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-
+router.beforeEach(async (to) => {
+  const token = localStorage.getItem("auth_token");
+  const tokenIsEmpty = token == null || token == undefined;
+  if (tokenIsEmpty && to.name != "Login") {
+    localStorage.removeItem("auth_token");
+    localStorage.removeItem("id");
+    return { name: "Login" };
+  }
+});
 export default router;

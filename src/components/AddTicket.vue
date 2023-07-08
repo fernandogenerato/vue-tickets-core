@@ -30,6 +30,7 @@
       <h5>Position {{ ticket.response.position }}</h5>
       <button class="btn btn-success" @click="newForm">Add</button>
     </div>
+    <!-- <div>Meu nome é: <input v-model="fotm" /></div> -->
   </div>
 </template>
 
@@ -40,6 +41,7 @@ export default {
 
   data() {
     return {
+      fotm: "",
       ticket: {
         name: "",
         email: "",
@@ -49,6 +51,19 @@ export default {
       submitted: false,
     };
   },
+  mounted() {
+    if (localStorage.fotm) {
+      this.fotm = localStorage.fotm;
+    }
+  },
+  /* 
+    examples: watching for changes
+  watch: {
+    fotm(newname) {
+      localStorage.fotm = newname;
+    },
+  },
+  */
   methods: {
     save() {
       var data = {
