@@ -54,8 +54,8 @@ export default {
       apiLoading: false,
       response: "",
       form: {
-        email: "test@test.com",
-        password: "1",
+        email: "",
+        password: "",
       },
     };
   },
