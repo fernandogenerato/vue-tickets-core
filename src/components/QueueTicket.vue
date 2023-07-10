@@ -1,5 +1,5 @@
 <template>
-  <form v-if="!isActive">
+  <form>
     <div class="form-group">
       <input
         v-model="form.queue_id"
@@ -8,51 +8,46 @@
         id="ticketform"
         placeholder="Digite o codigo da fila..."
       />
-      <small id="queueHelp" class="form-text text-muted"
-        >We'll never share your code with anyone else.</small
-      >
+      <small id="queueHelp" class="form-text text-muted">We'll never share your code with anyone else.</small>
     </div>
   </form>
-  <button
-    v-if="!isActive"
-    @click="enterQueue(this.form.queueId)"
-    class="btn btn-primary mb-2"
-  >
+  <button @click="enterQueue()" class="btn btn-primary mb-2">
     Confirm
   </button>
 </template>
 <script >
 import TicketService from "../services/TicketService";
+const sweet = require("sweetalert2");
+import { useGlobalStore } from "../stores/global";
+const env = useGlobalStore();
 export default {
-  props: {
-    isActive: Boolean,
-  },
   data() {
     return {
-      active: false,
       form: {
         queue_id: "",
-        user_id: "",
+        user_id: env.authId,
       },
     };
   },
 
-  mounted() {
-    this.form.user_id = localStorage.getItem("auth_id");
-  },
   methods: {
     enterQueue() {
-      TicketService.create(this.form)
+      TicketService.create(this.form, env.authToken)
         .then((res) => {
-          localStorage.setItem("active_queue", "true");
-          localStorage.setItem("position_queue", res.data.position);
-          localStorage.setItem("position_time", res.data.time);
-        })
-        .catch((err) => {
-          console.error(err);
-        })
-        .finally(() => {
+          env.$patch((state) => {
+            state.time = res.data.time;
+            state.position = res.data.position;
+            state.isActive = true;
+          });
           this.$router.push("/home");
+        })
+        .catch(() => {
+          sweet.fire({
+            title: "Erro para entrar na fila!",
+            text: "Favor validar o codigo inserido e tentar novamente.",
+            icon: "error",
+            confirmButtonText: "Fechar",
+          });
         });
     },
   },

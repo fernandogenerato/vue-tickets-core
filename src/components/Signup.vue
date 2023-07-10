@@ -40,6 +40,9 @@
   <button @click="signup(form)" class="btn btn-lg btn-primary btn-block">
     Cadastre-se
   </button>
+  <button @click="backToLogin()" class="btn btn-lg btn-primary btn-block">
+    Voltar
+  </button>
 
   <p class="mt-5 mb-3 text-muted">© 2023</p>
 </template>
@@ -69,11 +72,15 @@ export default {
     signup(form) {
       AuthService.createUser(form)
         .then(() => {
+          sweet.fire("Sucesso!", "Cadastro realizado!", "success");
           this.$router.push("/login");
         })
         .catch(() => {
           this.showAlert();
         });
+    },
+    backToLogin() {
+      this.$router.push("/login");
     },
   },
 };

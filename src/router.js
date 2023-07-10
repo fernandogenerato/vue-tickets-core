@@ -1,15 +1,14 @@
 import { createWebHistory, createRouter } from "vue-router";
-
 const routes = [
   { path: "/", redirect: "/login" },
   {
     path: "/signup",
-    name: "Signup",
+    name: "signup",
     component: () => import("./components/Signup"),
   },
   {
     path: "/login",
-    name: "Login",
+    name: "login",
     component: () => import("./components/Login"),
   },
   {
@@ -32,13 +31,11 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+import { useGlobalStore } from "./stores/global";
 router.beforeEach(async (to) => {
-  const token = localStorage.getItem("auth_token");
-  const tokenIsEmpty = token == null || token == undefined;
-  if (tokenIsEmpty && to.name != "Login") {
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("id");
-    return { name: "Login" };
+  const global = useGlobalStore();
+  if (!global.IsLogged && to.name != "login" && to.name != "signup") {
+    return { name: "login" };
   }
 });
 export default router;
