@@ -61,6 +61,15 @@ export default {
   },
 
   methods: {
+    showErrorAlert(cause) {
+      sweet.fire({
+        title: "Error!",
+        text: cause,
+        icon: "error",
+        confirmButtonText: "Fechar",
+      });
+    },
+
     showAlert() {
       sweet.fire({
         title: "Error!",
@@ -75,8 +84,17 @@ export default {
           sweet.fire("Sucesso!", "Cadastro realizado!", "success");
           this.$router.push("/login");
         })
-        .catch(() => {
-          this.showAlert();
+        .catch((err) => {
+          switch (err.response.status) {
+            case 400:
+              this.showErrorAlert("Favor validar os campos do formulario!");
+              break;
+            case 409:
+              this.showErrorAlert("Usuario já existe no sistema!");
+              break;
+            default:
+              this.showAlert();
+          }
         });
     },
     backToLogin() {
