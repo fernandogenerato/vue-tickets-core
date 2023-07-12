@@ -5,6 +5,7 @@ const sweet = require("sweetalert2");
 export const useGlobalStore = defineStore({
   id: "global",
   state: () => ({
+    refleshTime: 5,
     isActive: false,
     isAuthenticated: false,
     authToken: "",
@@ -26,20 +27,18 @@ export const useGlobalStore = defineStore({
     },
   },
   actions: {
+    getUser() {
+      TicketService.getID(this.authId).then((res) => {
+        this.$patch((state) => {
+          state.position = res.data.index;
+          state.time = res.data.inserted_at;
+          state.isActive = res.data.active;
+        });
+      });
+    },
     setLogoff() {
       localStorage.clear();
       this.$reset();
-    },
-    getUser() {
-      TicketService.getID(this.authId).then((res) => {
-        if (res.data.active) {
-          this.$patch((state) => {
-            state.position = res.data.index;
-            state.time = res.data.inserted_at;
-            state.isActive = res.data.active;
-          });
-        }
-      });
     },
     exitQueue() {
       TicketService.check(this.authId)

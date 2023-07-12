@@ -2,20 +2,23 @@
   <div>
     <div class="spinner-border m-5 center" v-if="loading" role="status"></div>
     <div v-if="tickets.length > 0">
-      <table class="table table-sm">
+      <h1>Tickets na base de dados</h1>
+      <table class="table-dark table-sm">
         <thead class="thead-dark">
           <tr>
             <th scope="col">Posição</th>
-            <th scope="col">Nome</th>
+            <th scope="col">ID</th>
             <th scope="col">Entrada</th>
+            <th scope="col">Ativo</th>
             <th scope="col">Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr @click="selectTableRow(t)" v-for="t in this.tickets" :key="t._id">
             <td>{{ t.index }}</td>
-            <td>{{ t.name }}</td>
+            <td>{{ t.user_id }}</td>
             <td>{{ parseDate(t.inserted_at) }}</td>
+            <td >{{ t.active}}</td>
             <td>
               <button
                 @click="checkItem(t._id)"
@@ -36,7 +39,6 @@
 </template>
 
 <script>
-
 import TicketService from "../services/TicketService";
 import moment from "moment";
 export default {
@@ -86,10 +88,9 @@ export default {
 
     checkItem(id) {
       TicketService.check(id)
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           this.loadTickets();
-         // Swal.fire("Check-in feito com sucesso!", "", "success");
+          // Swal.fire("Check-in feito com sucesso!", "", "success");
         })
         .catch((e) => {
           console.log(e);

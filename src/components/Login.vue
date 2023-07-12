@@ -7,7 +7,9 @@
         width="100"
         height="100"
       />
-      <h1 class="h3 mb-3 font-weight-normal">Olá, Faça login com o seu e-mail e senha.</h1>
+      <h1 class="h3 mb-3 font-weight-normal">
+        Olá, Faça login com o seu e-mail e senha.
+      </h1>
       <label for="inputEmail" class="sr-only">E-mail</label>
       <input
         v-model="form.email"
@@ -76,14 +78,19 @@ export default {
             state.authToken = res.data.token;
             state.authId = res.headers.get("Id");
             state.isAuthenticated = true;
+            state.isActive = res.data.active;
+            if (res.data.active) {
+              state.position = res.data.index;
+              state.time = res.data.inserted_at;
+            }
           });
           localStorage.setItem("auth_token", res.data.token);
-          env.getUser();
           this.$router.push("/home");
         })
         .catch(() => {
           this.showLoginAlert();
-        }).finally(() => this.apiLoading = false);
+        })
+        .finally(() => (this.apiLoading = false));
     },
     signup() {
       this.$router.push("/signup");

@@ -1,40 +1,48 @@
 <template>
-  <form>
-    <div class="form-group">
-      <input
-        v-model="form.queue_id"
-        type="text"
-        class="form-control"
-        id="ticketform"
-        placeholder="Digite o codigo da fila..."
-      />
-      <small id="queueHelp" class="form-text text-muted">We'll never share your code with anyone else.</small>
-    </div>
-  </form>
-  <button @click="enterQueue()" class="btn btn-primary mb-2">
-    Confirm
-  </button>
+  <div v-if=!this.env.IsActive>
+    <form>
+      <div class="form-group">
+        <input
+          v-model="form.queue_id"
+          type="text"
+          class="form-control"
+          id="ticketform"
+          placeholder="Digite o codigo da fila..."
+        />
+        <small id="queueHelp" class="form-text text-muted"
+          >We'll never share your code with anyone else.</small
+        >
+      </div>
+    </form>
+    <button @click="enterQueue()" class="btn btn-primary mb-2">Confirm</button>
+  </div>
 </template>
 <script >
 import TicketService from "../services/TicketService";
 const sweet = require("sweetalert2");
 import { useGlobalStore } from "../stores/global";
-const env = useGlobalStore();
 export default {
+  setup() {
+    const env = useGlobalStore();
+    return {
+      env,
+    };
+  },
+
   data() {
     return {
       form: {
         queue_id: "",
-        user_id: env.authId,
+        user_id: this.env.authId,
       },
     };
   },
 
   methods: {
     enterQueue() {
-      TicketService.create(this.form, env.authToken)
+      TicketService.create(this.form, this.env.authToken)
         .then((res) => {
-          env.$patch((state) => {
+          this.env.$patch((state) => {
             state.time = res.data.time;
             state.position = res.data.position;
             state.isActive = true;
