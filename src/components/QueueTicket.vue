@@ -1,5 +1,5 @@
 <template>
-  <div v-if=!this.env.IsActive>
+  <div v-if="!this.env.IsActive">
     <form>
       <div class="form-group">
         <input
@@ -14,7 +14,18 @@
         >
       </div>
     </form>
-    <button @click="enterQueue()" class="btn btn-primary mb-2">Confirm</button>
+    <button
+      v-if="!apiLoading"
+      @click="enterQueue()"
+      class="btn btn-primary mb-2"
+    >
+      Confirm
+    </button>
+    <div v-else class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
   </div>
 </template>
 <script >
@@ -31,6 +42,7 @@ export default {
 
   data() {
     return {
+      apiLoading: false,
       form: {
         queue_id: "",
         user_id: this.env.authId,
@@ -40,6 +52,8 @@ export default {
 
   methods: {
     enterQueue() {
+      this.apiLoading = true;
+
       TicketService.create(this.form, this.env.authToken)
         .then((res) => {
           this.env.$patch((state) => {
@@ -56,7 +70,8 @@ export default {
             icon: "error",
             confirmButtonText: "Fechar",
           });
-        });
+        })
+        .finally(() => (this.apiLoading = false));
     },
   },
 };

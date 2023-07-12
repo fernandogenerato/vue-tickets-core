@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 
 import TicketService from "../services/TicketService";
-const sweet = require("sweetalert2");
 export const useGlobalStore = defineStore({
   id: "global",
   state: () => ({
@@ -39,21 +38,6 @@ export const useGlobalStore = defineStore({
     setLogoff() {
       localStorage.clear();
       this.$reset();
-    },
-    exitQueue() {
-      TicketService.check(this.authId)
-        .then(() => {
-          this.$patch((state) => {
-            state.isActive = false;
-          });
-        })
-        .catch(() => {
-          sweet.fire({
-            title: "Erro para sair da fila!",
-            icon: "error",
-            confirmButtonText: "Fechar",
-          });
-        });
     },
   },
 });

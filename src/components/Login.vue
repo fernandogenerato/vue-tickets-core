@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!apiLoading">
+  <div>
     <form class="form-signin">
       <img
         class="mb-4"
@@ -27,21 +27,32 @@
         id="inputPassword"
         class="form-control"
         placeholder="Senha"
+        autofocus=""
         required
       />
     </form>
-    <button @click="login(this.form)" class="btn btn-lg btn-primary btn-block">
+    <button
+      v-if="!apiLoading"
+      @click="login(this.form)"
+      class="btn btn-lg btn-primary btn-block"
+    >
       Entrar
     </button>
-    <button @click="this.signup()" class="btn btn-lg btn-primary btn-block">
+
+    <button
+      v-if="!apiLoading"
+      @click="this.signup()"
+      class="btn btn-lg btn-primary btn-block"
+    >
       Cadastre-se
     </button>
-  </div>
-  <div v-else class="text-center">
-    <div class="spinner-border" role="status">
-      <span class="sr-only">Loading...</span>
+    <div v-else class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
     </div>
   </div>
+
   <p class="mt-5 mb-3 text-muted">© 2023</p>
 </template>
 <script>
