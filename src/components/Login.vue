@@ -87,7 +87,7 @@ export default {
         .then((res) => {
           env.$patch((state) => {
             state.authToken = res.data.token;
-            state.authId = res.headers.get("Id");
+            state.authId = res.data.id;
             state.isAuthenticated = true;
             state.isActive = res.data.active;
             if (res.data.active) {
