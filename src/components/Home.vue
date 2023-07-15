@@ -63,7 +63,7 @@ export default {
     if (this.env.IsActive && this.env.position != 1) {
       this.intervalID = setInterval(() => {
         this.env.getUser();
-      }, 16000);
+      }, 10000);
     }
   },
   beforeUnmount() {
